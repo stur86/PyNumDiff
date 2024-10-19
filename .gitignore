@@ -116,3 +116,6 @@ __pycache__
 dist
 *.whl
 .vscode
+
+# Built documentation
+docs/build/*
