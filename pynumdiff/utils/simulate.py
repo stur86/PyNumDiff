@@ -195,7 +195,8 @@ def pop_dyn(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
     :type dt: float, optional
 
     :param simdt: a float number representing the the real simulation step size we use to generate the time series,
-                  typically smaller than dt to achieve high precision
+                  typically smaller than dt to achieve high precision. Ignored here as the problem has an analytical
+                  solution
     :type simdt: float, optional
 
     :return: a tuple consisting of:
@@ -207,7 +208,7 @@ def pop_dyn(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
 
     :rtype: tuple -> (np.array, np.array, np.array, None)
     """
-    t = _np.arange(0, timeseries_length, simdt)
+    t = _np.arange(0, timeseries_length, dt)
     K = 2  # carrying capacity
     r = 4  # biotic potential
 
@@ -225,8 +226,7 @@ def pop_dyn(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
     pos = _np.ravel(actual_vals[0, :])
     vel = _np.ravel(actual_vals[1, :])
 
-    idx = _np.arange(0, len(t), int(dt/simdt))
-    return noisy_pos[idx], pos[idx], vel[idx], None
+    return noisy_pos, pos, vel, None
 
 
 def linear_autonomous(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
@@ -278,7 +278,7 @@ def linear_autonomous(timeseries_length=4, noise_type='normal', noise_parameters
 
     smooth_x, dxdt = _finite_difference( _np.ravel(x), simdt)
     noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
-
+    
     idx = _np.arange(0, len(t), int(dt/simdt))
     return _np.ravel(noisy_x)[1:][idx], smooth_x[1:][idx], dxdt[1:][idx], None
 
