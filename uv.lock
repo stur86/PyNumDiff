@@ -1139,7 +1139,7 @@ wheels = [
 
 [[package]]
 name = "pynumdiff"
-version = "0.1.dev313+g5c7c8f2.d20241019"
+version = "0.1.dev315+g451d286.d20241019"
 source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
@@ -1157,6 +1157,7 @@ advanced = [
 dev = [
     { name = "ipykernel" },
     { name = "jupyter" },
+    { name = "matplotlib" },
     { name = "poethepoet" },
     { name = "pylint" },
     { name = "pytest" },
@@ -1177,6 +1178,7 @@ requires-dist = [
 dev = [
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "matplotlib" },
     { name = "poethepoet", specifier = ">=0.29.0" },
     { name = "pylint", specifier = ">=3.3.1" },
     { name = "pytest", specifier = ">=8.3.3" },

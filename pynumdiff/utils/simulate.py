@@ -211,14 +211,10 @@ def pop_dyn(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
     K = 2  # carrying capacity
     r = 4  # biotic potential
 
-    x = [0.1]  # population
-    dxdt = [r*x[-1]*(1-x[-1]/K)]
-    for _ in t[1:]:
-        x.append(x[-1] + simdt*dxdt[-1])
-        dxdt.append(r*x[-1]*(1-x[-1]/K))
-
-    x = _np.array(x)
-    dxdt = _np.array(dxdt)
+    x0 = 0.1  # population
+    t0 = _np.log(K/x0-1)/r
+    x = K/(1+_np.exp(-r*(t-t0)))
+    dxdt = r*x*(1-x/K)
 
     noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
 
