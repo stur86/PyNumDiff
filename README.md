@@ -201,6 +201,16 @@ We will frequently update simple examples for demo purposes, and here are curren
 * The following heuristic works well for choosing `tvgamma`, where `cutoff_frequency` is the highest frequency content of the signal in your data, and `dt` is the timestep: `tvgamma=np.exp(-1.6*np.log(cutoff_frequency)-0.71*np.log(dt)-5.1)`
 
 
+### Using UV
+
+This package has been updated to use [the UV package manager](https://docs.astral.sh/uv/). Use:
+
+* `uv lock` to update the lockfile containing the exact specification of all dependencies
+* `uv add <package>` to add a new dependency (`--dev` if it's a development one)
+* `uv venv` to create a virtual environment
+* `uv run <command>` to run any script or command in that virtual environment even without activating it
+
+
 ### Running the tests
 
 We are using Travis CI for continuous intergration testing. You can check out the current status 
@@ -208,7 +218,15 @@ We are using Travis CI for continuous intergration testing. You can check out th
 
 To run tests locally, type:
 ```bash
-> pytest pynumdiff
+> uv run poe test
+```
+
+### Building the documents
+
+Run 
+
+```bash
+> uv run poe docs
 ```
 
 
