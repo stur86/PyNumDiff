@@ -11,7 +11,7 @@ _finite_difference = _utility.finite_difference
 
 
 # pylint: disable-msg=too-many-locals, too-many-arguments, no-member
-def __add_noise__(x, noise_type, noise_parameters, random_seed):
+def _add_noise(x, noise_type, noise_parameters, random_seed):
     """
     Adding synthetic noise to the time series data
 
@@ -28,9 +28,9 @@ def __add_noise__(x, noise_type, noise_parameters, random_seed):
     :return: noisy time series data
     :rtype: np.array
     """
-    _np.random.seed(random_seed)
+    rng = _np.random.default_rng(random_seed)
     timeseries_length = _np.max(x.shape)
-    noise = _np.random.__getattribute__(noise_type)(noise_parameters[0], noise_parameters[1],
+    noise = rng.__getattribute__(noise_type)(noise_parameters[0], noise_parameters[1],
                                                     timeseries_length)
     return x + noise
 
@@ -85,7 +85,7 @@ def sine(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5), ra
         x += magnitude/len(frequencies)*_np.sin(t*2*_np.pi*f)
         dxdt += magnitude/len(frequencies)*_np.cos(t*2*_np.pi*f)*2*_np.pi*f
     actual_vals = _np.array(_np.vstack((x, dxdt)))
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
     #
     noisy_measurements = _np.array(noisy_x)
     #
@@ -159,7 +159,7 @@ def triangle(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5)
     x = _np.interp(t, reversal_ts, reversal_vals)
     _, dxdt = _finite_difference(x, dt=simdt)
 
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
 
     actual_vals = _np.array(_np.vstack((x, dxdt)))
     noisy_measurements = _np.array(noisy_x)
@@ -220,7 +220,7 @@ def pop_dyn(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.5),
     x = _np.array(x)
     dxdt = _np.array(dxdt)
 
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
 
     actual_vals = _np.array(_np.vstack((x, dxdt)))
     noisy_measurements = _np.array(noisy_x)
@@ -281,7 +281,7 @@ def linear_autonomous(timeseries_length=4, noise_type='normal', noise_parameters
     x *= 2
 
     smooth_x, dxdt = _finite_difference( _np.ravel(x), simdt)
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
 
     idx = _np.arange(0, len(t), int(dt/simdt))
     return _np.ravel(noisy_x)[1:][idx], smooth_x[1:][idx], dxdt[1:][idx], None
@@ -330,7 +330,7 @@ def pi_control(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.
     x = _np.ravel(actual_vals[0, :])
     dxdt = _np.ravel(actual_vals[1, :])
     
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
 
     actual_vals = _np.array(_np.vstack((x, dxdt)))
     noisy_measurements = _np.array(noisy_x)
@@ -470,9 +470,9 @@ def lorenz_xyz(timeseries_length=4, noise_type='normal', noise_parameters=(0, 0.
     z = xyz[2, 0:-1] / f
     dzdt = xyz_dot[2, :] / f
 
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
-    noisy_y = __add_noise__(y, noise_type, noise_parameters, random_seed+1)
-    noisy_z = __add_noise__(z, noise_type, noise_parameters, random_seed+2)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
+    noisy_y = _add_noise(y, noise_type, noise_parameters, random_seed+1)
+    noisy_z = _add_noise(z, noise_type, noise_parameters, random_seed+2)
 
     actual_vals = _np.array(_np.vstack((x, y, z, dxdt, dydt, dzdt)))
     noisy_measurements = _np.array(_np.vstack((noisy_x, noisy_y, noisy_z)))
@@ -545,9 +545,9 @@ def rk4_lorenz_xyz(timeseries_length=4, noise_type='normal', noise_parameters=(0
         y = vals[1, :]
         z = vals[2, :]
 
-    noisy_x = __add_noise__(x, noise_type, noise_parameters, random_seed)
-    noisy_y = __add_noise__(y, noise_type, noise_parameters, random_seed+1)
-    noisy_z = __add_noise__(z, noise_type, noise_parameters, random_seed+2)
+    noisy_x = _add_noise(x, noise_type, noise_parameters, random_seed)
+    noisy_y = _add_noise(y, noise_type, noise_parameters, random_seed+1)
+    noisy_z = _add_noise(z, noise_type, noise_parameters, random_seed+2)
 
     _, dxdt = _finite_difference(x, dt)
     _, dydt = _finite_difference(y, dt)
